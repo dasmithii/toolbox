@@ -1,23 +1,33 @@
-# Object files
+# Compiled Object files.
+*.slo
+*.lo
 *.o
-*.ko
 *.obj
-*.elf
 
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Compiled Dynamic libraries.
 *.so
-*.so.*
 *.dylib
+*.dll
 
-# Executables
+# Compiled Static libraries.
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables.
 *.exe
 *.out
 *.app
-*.i*86
-*.x86_64
-*.hex
+
+# CMake-generated files.
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# Executables.
+bin
+build
+dist
