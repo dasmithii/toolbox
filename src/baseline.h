@@ -3,5 +3,7 @@
 #include "array.h"
 #include "debug.h"
 #include "error.h"
+#include "fllist.h"
+#include "memory.h"
 #endif
 

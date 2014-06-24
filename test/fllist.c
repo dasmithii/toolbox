@@ -10,7 +10,6 @@
     PASS()
 
 
-// BASIC
 TEST fllist_basic_test() 
 {
 	SETUP_FLLIST();
