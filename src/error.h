@@ -52,10 +52,13 @@
  	check_max(n, max)
 
 #define check_pos(n) \
- 	check_m(n > 0, "Non-positive number.");
+ 	check_m((n) > 0, "Non-positive number.");
 
 #define check_neg(n) \
- 	check_m(n < 0, "Non-negative number.");
+ 	check_m((n) < 0, "Non-negative number.");
+
+ #define check_nzero(n) \
+ 	check_m((n) != 0, "Expected non-zero.")
 
 
 #endif

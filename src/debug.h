@@ -49,9 +49,12 @@
  	assume_max(n, max)
 
 #define assume_pos(n) \
- 	assume_m(n > 0, "Non-positive number.");
+ 	assume_m((n) > 0, "Non-positive number.")
 
 #define assume_neg(n) \
- 	assume_m(n < 0, "Non-negative number.");
+ 	assume_m((n)) < 0, "Non-negative number.")
+
+#define assume_nzero(n) \
+ 	assume_m((n) != 0, "Expected non-zero.")
 
 #endif

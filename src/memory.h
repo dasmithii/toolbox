@@ -12,8 +12,8 @@ void swap(void *const addr1
 
 // Reverses memory blocks of given size.
 void reverse(const void *const addr
-	          , const size_t num_elems
-	          , const size_t elem_size);
+	       , const size_t num_elems
+	       , const size_t elem_size);
 
 // Offsets memory address of any pointer type by <n> bytes.
 void *offset(const void *const addr

@@ -2,9 +2,12 @@
 
 // ---------------------------------------------------------- //
 void swap(void *const addr1
-	       , void *const addr2
-	       , const size_t size)
+	    , void *const addr2
+	    , const size_t size)
 {
+	printf("CALL!\n");
+	printf("- %p\n", addr1);
+	printf("- %p\n", addr2);
 	assume_ptrs(addr1, addr2);
 	char *ptr1 = (char*) addr1;
 	char *ptr2 = (char*) addr2;
@@ -18,21 +21,21 @@ void swap(void *const addr1
 
 // ---------------------------------------------------------- //
 void reverse(const void *const addr
-	          , const size_t num_elems
-	          , const size_t elem_size)
+	       , const size_t num_elems
+	       , const size_t elem_size)
 {
 	assume_ptr(addr);
-	assume_m(elem_size != 0, "Non-positive array element size.");
+	assume_nzero(elem_size);
 	for(int i = 0; i < num_elems / 2; ++i){
-		void *const p1 = block_index(addr, elem_size, i);
-		void *const p2 = block_index(addr, elem_size, num_elems - i - 1);
+		void *const p1 = block_index(addr, i, elem_size);
+		void *const p2 = block_index(addr, num_elems - i - 1, elem_size);
 		swap(p1, p2, elem_size);
 	}
 }
 
 // ---------------------------------------------------------- //
 void *offset(const void *const addr
-              , const int bytes)
+           , const int bytes)
 {
 	assume_ptr(addr);
 	return (void*) (((char*) addr) + bytes);
@@ -44,7 +47,7 @@ void *block_index(const void *const addr
              , const size_t elem_size)
 {
 	assume_ptr(addr);
-	assume_m(elem_size > 0, "Non-positive array element size.");
+	assume_pos(elem_size);
 	return offset(addr, elem_size * block_index);
 }
 
