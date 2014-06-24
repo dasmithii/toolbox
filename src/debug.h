@@ -24,7 +24,7 @@
  	assume_m((n) <= (max), "Value too large.")
 
 #define assume_ceil(n, ceil) \
- 	assume_m((n) < (max), "Value too large.")
+ 	assume_m((n) < (ceil), "Value too large.")
 
 #define assume_min(n, min) \
  	assume_m((n) >= (min), "Value too small.")
