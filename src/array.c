@@ -41,7 +41,7 @@ void *array_hook(const array *const arr
 	              , const size_t i){
 	assume_ptr(arr);
 	assume_m(i < arr->num_elems, "Index out of bounds.");
-	return arr->data + arr->elem_size * arr->num_elems;
+	return arr->data + arr->elem_size * i;
 }
 
 // --------------------------------------------------------------- //
@@ -78,7 +78,11 @@ void array_fill(array *const arr
 // --------------------------------------------------------------- //
 void array_reverse(array *const arr){
 	assume_ptr(arr);
-	reverse(arr, arr->num_elems, arr->elem_size);
+	for(int i = 0; i < arr->num_elems / 2; ++i){
+		void *const p1 = array_hook(arr, i);
+		void *const p2 = array_hook(arr, arr->num_elems - 1 - i);
+		swap(p1, p2, arr->elem_size);
+	}
 }
 
 // --------------------------------------------------------------- //

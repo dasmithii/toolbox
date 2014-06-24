@@ -48,7 +48,7 @@ TEST memory_zero(){
 	PASS();
 }
 
-GREATEST_SUITE(memory){
+GREATEST_SUITE(memory_suite){
 	RUN_TEST(memory_swap);
 	RUN_TEST(memory_reverse);
 	RUN_TEST(memory_offset);

@@ -28,24 +28,24 @@ void array_free(array *const arr);
 
 // Returns pointer to nth element.
 void *array_hook(const array *const arr
-	              , const size_t i);
+	           , const size_t i);
 
 // Copies data into element.
 void array_set(array *const arr
-	            , const size_t i
-	            , const void *const ptr);
+             , const size_t i
+	         , const void *const ptr);
 
 // Copies data from element.
 void array_fetch(const array *const arr
-	              , const size_t i
-	              , void *const dest);
+	           , const size_t i
+	           , void *const dest);
 
 // Sets all array bytes to zero.
 void array_zero(array *const arr);
 
 // Copies data from address <val> to each array element.
 void array_fill(array *const arr
-	             , const void *const val);
+	          , const void *const val);
 
 // Reverses elements.
 void array_reverse(array *const arr);
@@ -60,7 +60,7 @@ void array_each(array *const arr
 
 // Copies all internal data, returning an independent array.
 int array_copy(const array *const src
-	            , array *const dest);
+	         , array *const dest);
 
 // Allocates and returns a copied array. Returns NULL on failure.
 array *array_clone(const array *const arr);
@@ -70,7 +70,7 @@ size_t array_innerSize(const array *const arr);
 
 // Sets number of elements.
 int array_setCapacity(array *const arr
-	                   , const size_t elems);
+	                , const size_t elems);
 
 
 #endif

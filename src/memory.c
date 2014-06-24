@@ -5,9 +5,6 @@ void swap(void *const addr1
 	    , void *const addr2
 	    , const size_t size)
 {
-	printf("CALL!\n");
-	printf("- %p\n", addr1);
-	printf("- %p\n", addr2);
 	assume_ptrs(addr1, addr2);
 	char *ptr1 = (char*) addr1;
 	char *ptr2 = (char*) addr2;
