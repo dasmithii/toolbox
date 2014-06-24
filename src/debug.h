@@ -17,7 +17,7 @@
 	assume_m((a), "Unexpected null pointer.");
 
 #define assume_ptrs(a, b) \
-	assume_ptr((a));      \ 
+	assume_ptr((a));      \
  	assume_ptr((b))
 
 #define assume_max(n, max) \
@@ -32,19 +32,19 @@
 #define assume_floor(n, floor) \
  	assume_m((n) > (floor), "Value too small.");
 
-#define assume_bound_ii(n, min, max) \ 
+#define assume_bound_ii(n, min, max) \
  	assume_min(n, min);              \
  	assume_max(n, max)
 
-#define assume_bound_ee(n, floor, ceil) \ 
+#define assume_bound_ee(n, floor, ceil) \
  	assume_floor(n, min);               \
  	assume_ceil(n, max)
 
-#define assume_bound_ie(n, min, ceil) \ 
+#define assume_bound_ie(n, min, ceil) \
  	assume_min(n, min);               \
  	assume_ceil(n, ceil)
 
-#define assume_bound_ei(n, floor, max) \ 
+#define assume_bound_ei(n, floor, max) \
  	assume_floor(n, floor);            \
  	assume_max(n, max)
 
