@@ -7,7 +7,6 @@
 #include "debug.h"
 
 
-
 // Represents one item in the linked list.
 typedef struct fllist_node {
 	struct fllist_node *next;
@@ -21,42 +20,90 @@ typedef struct {
 	size_t elem_size;
 } fllist;
 
-// Management.
-void fllist_init(fllist *const, const size_t);
-void fllist_clear(fllist *const);
-void fllist_clean(fllist *const);
-int fllist_cloneTo(const fllist *const, fllist *const);
-fllist *fllist_clone(const fllist *const);
 
-// Value storage.
-int fllist_append(fllist *const, const void *const);
-int fllist_prepend(fllist *const, const void* const);
-int fllist_insert(fllist *const, const unsigned, const void *const);
-void fllist_set(fllist *const, const unsigned, const void *const);
+// Instanciates preallocated list.
+void fllist_init(fllist *const list
+	           , const size_t elem_size);
 
-// Value fetching.
-void *fllist_hook(const fllist *const, const unsigned);
-void *fllist_hookHead(const fllist *const);
-void *fllist_hookLast(const fllist *const);
-void fllist_fetch(const fllist *const, const unsigned, void *const);
-void fllist_fetchHead(const fllist *const, void *const);
-void fllist_fetchLast(const fllist *const, void *const);
+// Deallocates all list elements.
+void fllist_clear(fllist *const list);
 
-// Value removal.
-void fllist_remove(fllist *const, const unsigned);
-void fllist_pop(fllist *const);
-void fllist_popf(fllist *const);
+// Frees all internal memory.
+void fllist_clean(fllist *const list);
 
-// Special functions.
-void fllist_each(fllist *const, void (*)(void*));
-void fllist_reverse(fllist *const);
-void fllist_sort(fllist *const, int (*)(const void*, const void*));
+// Clones to preallocated memory block.
+int fllist_copy(const fllist *const
+	          , fllist *const);
 
-// Helper functions.
-size_t fllist_nodeSize(const fllist *const);
-size_t fllist_size(const fllist *const);
+// Allocates, clones, and returns copied list.
+fllist *fllist_clone(const fllist *const list);
 
+// Appends data from given address.
+int fllist_append(fllist *const list
+	            , const void *const element);
 
+// Prepends data from given address.
+int fllist_prepend(fllist *const list
+	             , const void* const element);
+
+// Inserts data from given address.
+int fllist_insert(fllist *const list
+	             , const unsigned index
+	             , const void *const element);
+
+// Copies data at given address to given index.
+void fllist_set(fllist *const list
+	          , const unsigned index
+	          , const void *const element);
+
+// Returns pointer to location where item <index> is stored.
+void *fllist_hook(const fllist *const list
+	            , const unsigned index);
+
+// Hooks first element.
+void *fllist_hookHead(const fllist *const list);
+
+// Hooks last element.
+void *fllist_hookLast(const fllist *const list);
+
+// Copies data at given index to given address.
+void fllist_fetch(const fllist *const list
+	            , const unsigned index
+	            , void *const destination);
+
+// Fetches first element.
+void fllist_fetchHead(const fllist *const list
+	                , void *const destination);
+
+// Fetches last element.
+void fllist_fetchLast(const fllist *const list
+	                , void *const destination);
+
+// Removes item at given index, shifting subsquent items
+// leftward.
+void fllist_remove(fllist *const list
+	             , const unsigned index);
+
+// Removes last element.
+void fllist_pop(fllist *const list);
+
+// Removes first element.
+void fllist_popf(fllist *const list);
+
+// Applies given function to each element.
+void fllist_each(fllist *const list, void (*function)(void*));
+
+// Reverses items in list.
+void fllist_reverse(fllist *const list);
+
+// Sorts in an extremely inneficient manner.
+void fllist_sort(fllist *const list, int (*compare)(const void*, const void*));
+
+// Returns bytes in each node.
+size_t fllist_nodeSize(const fllist *const list);
+
+// Counts elements in list.
+size_t fllist_size(const fllist *const list);
 
 
 #endif

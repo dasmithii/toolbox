@@ -48,7 +48,7 @@ void fllist_clean(fllist *const list)
 }
 
 // Clones <list> into address <to>.
-int fllist_cloneTo(const fllist *const list, fllist *const to)
+int fllist_copy(const fllist *const list, fllist *const to)
 {
 	assume_ptrs(list, to);
 	fllist_init(to, list->elem_size);
@@ -73,7 +73,7 @@ fllist *fllist_clone(const fllist *const list)
 	if(!ret)
 		return NULL;
 
-	int rc = fllist_cloneTo(list, ret);
+	int rc = fllist_copy(list, ret);
 	if(rc){
 		free(ret);
 		return NULL;
