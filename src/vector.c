@@ -1,8 +1,7 @@
 #include "vector.h"
 #define DEFAULT_CAPACITY 25
 
-
-// Initializes vector with default capacity.
+// --------------------------------------------------------------- //
 int vector_init(vector *const vec, const size_t elem_size)
 {
 	assume_ptr(vec);
@@ -18,10 +17,7 @@ int vector_init(vector *const vec, const size_t elem_size)
 	return 0;
 }
 
-// Cleans internal storage of vector, invalidating the object,
-// and all elements. Note: if elements are pointers to 
-// dynamically allocated memory, they should be delt with 
-// separately - no free() calls are made.
+// --------------------------------------------------------------- //
 void vector_clean(vector *const vec)
 {
 	assume_ptr(vec);
@@ -29,8 +25,7 @@ void vector_clean(vector *const vec)
 	vec->size = 0;
 }
 
-// Appends element to vector, expanding size if necessary. Returns
-// zero on success, non-zero if memory allocation fails.
+// --------------------------------------------------------------- //
 int vector_append(vector *const vec, const void *const ptr)
 {
 	assume_ptrs(vec, ptr);
@@ -48,12 +43,13 @@ int vector_append(vector *const vec, const void *const ptr)
 	return 0;
 }
 
+// --------------------------------------------------------------- //
 int vector_prepend(vector *const vec, const void *const ptr)
 {
 	return vector_insert(vec, 0, ptr);
 }
 
-// Fetches element <i> and places data in <to>.
+// --------------------------------------------------------------- //
 void vector_fetch(const vector *const vec, const unsigned i, void *const to)
 {
 	assume_ptrs(vec, to);
@@ -63,6 +59,7 @@ void vector_fetch(const vector *const vec, const unsigned i, void *const to)
 	memcpy(to, ptr, vec->buffer.elem_size);
 }
 
+// --------------------------------------------------------------- //
 void vector_fetchLast(const vector *const vec, void *const to)
 {
 	assume_pos(vec->size);
@@ -70,6 +67,7 @@ void vector_fetchLast(const vector *const vec, void *const to)
 	memcpy(to, ptr, vec->buffer.elem_size);
 }
 
+// --------------------------------------------------------------- //
 void vector_fetchHead(const vector *const vec, void *const to)
 {
 	assume_ptrs(vec, to);
@@ -77,7 +75,7 @@ void vector_fetchHead(const vector *const vec, void *const to)
 	memcpy(to, vec->buffer.data, vec->buffer.elem_size);
 }
 
-// Returns pointer to element <i>.
+// --------------------------------------------------------------- //
 void *vector_hook(const vector *const vec, const unsigned i)
 {
 	assume_ptr(vec);
@@ -85,8 +83,7 @@ void *vector_hook(const vector *const vec, const unsigned i)
 	return array_hook(&vec->buffer, i);
 }
 
-// Places data from address <ptr> in element position <i>, and 
-// shifts other elements accordingly.
+// --------------------------------------------------------------- //
 int vector_insert(vector *const vec, const unsigned i, const void *const ptr)
 {
 	assume_ptrs(vec, ptr);
@@ -108,7 +105,7 @@ int vector_insert(vector *const vec, const unsigned i, const void *const ptr)
 	return 0;
 }
 
-// Removes element <i>, shifting blocks accordingly.
+// --------------------------------------------------------------- //
 void vector_remove(vector *const vec, const int i)
 {
 	assume_ptr(vec);
@@ -122,7 +119,7 @@ void vector_remove(vector *const vec, const int i)
 	vec->size--;
 }
 
-// Reverses elements in place.
+// --------------------------------------------------------------- //
 void vector_reverse(vector *const vec)
 {
 	assume_ptr(vec);
@@ -145,6 +142,7 @@ void vector_reverse(vector *const vec)
 
 }
 
+// --------------------------------------------------------------- //
 vector *vector_clone(const vector *const vec)
 {
 	assume_ptr(vec);
@@ -165,7 +163,7 @@ vector *vector_clone(const vector *const vec)
 	return ret;
 }
 
-// Removes first element.
+// --------------------------------------------------------------- //
 void vector_popf(vector *const vec)
 {
 	assume_ptr(vec);
@@ -178,7 +176,7 @@ void vector_popf(vector *const vec)
 	}
 }
 
-// Removes final element.
+// --------------------------------------------------------------- //
 void vector_pop(vector *const vec)
 {
 	assume_ptr(vec);
@@ -186,7 +184,7 @@ void vector_pop(vector *const vec)
 	vec->size--;
 }
 
-// Removes all elements.
+// --------------------------------------------------------------- //
 void vector_clear(vector *const vec)
 {
 	assume_ptr(vec);
@@ -194,7 +192,7 @@ void vector_clear(vector *const vec)
 	vector_setCapacity(vec, DEFAULT_CAPACITY);
 }
 
-// Applies <func> to each element.
+// --------------------------------------------------------------- //
 void vector_each(vector *const vec, void (*func)(void*))
 {
 	assume_ptrs(vec, func);
@@ -205,8 +203,7 @@ void vector_each(vector *const vec, void (*func)(void*))
 	}
 }
 
-// Ensures capacity of <n> elements, regardless of element
-// size.
+// --------------------------------------------------------------- //
 int vector_setCapacity(vector *const vec, const size_t n)
 {
 	assume_ptr(vec);
@@ -215,8 +212,7 @@ int vector_setCapacity(vector *const vec, const size_t n)
 	return array_setCapacity(&vec->buffer, n);
 }
 
-// If <n> is above current capacity, capacity is set to 
-// <n>. Otherwise, nothing is done.
+// --------------------------------------------------------------- //
 int vector_reserve(vector * const vec, const size_t n)
 {
 	assume_ptr(vec);
@@ -227,7 +223,7 @@ int vector_reserve(vector * const vec, const size_t n)
 	return 0;
 }
 
-// Inserts <elem> into position <i>
+// --------------------------------------------------------------- //
 void vector_set(vector *const vec, const unsigned i, const void *const elem)
 {
 	assume_ptrs(vec, elem);
@@ -236,7 +232,7 @@ void vector_set(vector *const vec, const unsigned i, const void *const elem)
 	memcpy(dest, elem, vec->buffer.elem_size);
 }
 
-// Doubles vector capacity.
+// --------------------------------------------------------------- //
 int vector_expand(vector *const vec)
 {
 	assume_ptr(vec);
@@ -244,25 +240,27 @@ int vector_expand(vector *const vec)
 	return vector_setCapacity(vec, cap);
 }
 
-// Minifies memory usage.
+// --------------------------------------------------------------- //
 int vector_contract(vector *const vec)
 {
 	assume_ptr(vec);
 	return vector_setCapacity(vec, vec->size);
 }
 
+// --------------------------------------------------------------- //
 void *vector_hookLast(const vector *const vec)
 {
 	int i = vec->size - 1;
 	return vector_hook(vec, i);
 }
 
+// --------------------------------------------------------------- //
 void *vector_hookHead(const vector *const vec)
 {
 	return vec->buffer.data;
 }
 
-
+// --------------------------------------------------------------- //
 void vector_sort(vector *const vec, int (*cmp)(const void*, const void*))
 {
 	array_sort(&vec->buffer, cmp);
