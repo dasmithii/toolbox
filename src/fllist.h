@@ -96,7 +96,7 @@ void fllist_each(fllist *const list, void (*function)(void*));
 // Reverses items in list.
 void fllist_reverse(fllist *const list);
 
-// Sorts in an extremely inneficient manner.
+// Applies bubblesort.
 void fllist_sort(fllist *const list, int (*compare)(const void*, const void*));
 
 // Returns bytes in each node.

@@ -1,6 +1,6 @@
 #include "fllist.h"
 
-// Returns pointer to node <i>. NULL on bounds error.
+// --------------------------------------------------------------- //
 static fllist_node *fllist_node_hookNode(fllist_node *node, const unsigned i)
 {
 	for(int n = 0; n < i; ++n){
@@ -11,6 +11,7 @@ static fllist_node *fllist_node_hookNode(fllist_node *node, const unsigned i)
 	return node;
 }
 
+// --------------------------------------------------------------- //
 static fllist_node *fllist_hookNode(const fllist *const list, const unsigned i)
 {
 	if(list->first)
@@ -18,7 +19,7 @@ static fllist_node *fllist_hookNode(const fllist *const list, const unsigned i)
 	return NULL;
 }
 
-// Initializes pre-allocated list with specified element size.
+// --------------------------------------------------------------- //
 void fllist_init(fllist *const list, const size_t elem_size)
 {
 	assume_ptr(list);
@@ -27,8 +28,7 @@ void fllist_init(fllist *const list, const size_t elem_size)
 	list->elem_size = elem_size;
 }
 
-// Frees all internally-allocated memory. Results in a usable
-// list of size zero.
+// --------------------------------------------------------------- //
 void fllist_clear(fllist *const list)
 {
 	assume_ptr(list);
@@ -42,12 +42,13 @@ void fllist_clear(fllist *const list)
 	list->last  = NULL;
 }
 
+// --------------------------------------------------------------- //
 void fllist_clean(fllist *const list)
 {
 	fllist_clear(list);
 }
 
-// Clones <list> into address <to>.
+// --------------------------------------------------------------- //
 int fllist_copy(const fllist *const list, fllist *const to)
 {
 	assume_ptrs(list, to);
@@ -65,7 +66,7 @@ int fllist_copy(const fllist *const list, fllist *const to)
 	return 0;
 }
 
-// Produces a newly allocated, completely independent clone of <list>.
+// --------------------------------------------------------------- //
 fllist *fllist_clone(const fllist *const list)
 {
 	assume_ptr(list);
@@ -81,7 +82,7 @@ fllist *fllist_clone(const fllist *const list)
 	return ret;
 }
 
-// Appends <elem> allocating necessary memory on heap.
+// --------------------------------------------------------------- //
 int fllist_append(fllist *const list, const void *const elem)
 {
 	assume_ptrs(list, elem);
@@ -101,7 +102,7 @@ int fllist_append(fllist *const list, const void *const elem)
 	return 0;
 }
 
-// Prepends <elem> allocating necessary memory on heap.
+// --------------------------------------------------------------- //
 int fllist_prepend(fllist *const list, const void *const elem)
 {
 	assume_ptrs(list, elem);
@@ -116,7 +117,7 @@ int fllist_prepend(fllist *const list, const void *const elem)
 	return 0;
 }
 
-// Inserts data from <elem> into position <i>.
+// --------------------------------------------------------------- //
 int fllist_insert(fllist *const list, const unsigned i, const void *const elem)
 {
 	assume_ptrs(list, elem);
@@ -138,7 +139,7 @@ int fllist_insert(fllist *const list, const unsigned i, const void *const elem)
 	return 0;
 }
 
-// Copies data from <src> to element <i>.
+// --------------------------------------------------------------- //
 void fllist_set(fllist *const list, const unsigned i, const void *const src)
 {
 	assume_ptrs(list, src);
@@ -147,7 +148,7 @@ void fllist_set(fllist *const list, const unsigned i, const void *const src)
 	memcpy(dest, src, list->elem_size);
 }
 
-// Copies element <i> to <dest>.
+// --------------------------------------------------------------- //
 void fllist_fetch(const fllist *const list, const unsigned i, void *const dest)
 {
 	assume_ptrs(list, dest);
@@ -156,7 +157,7 @@ void fllist_fetch(const fllist *const list, const unsigned i, void *const dest)
 	memcpy(dest, src, list->elem_size);
 }
 
-// Copies first element to <dest>.
+// --------------------------------------------------------------- //
 void fllist_fetchHead(const fllist *const list, void *const dest)
 {
 	assume_ptrs(list, dest);
@@ -165,7 +166,7 @@ void fllist_fetchHead(const fllist *const list, void *const dest)
 	memcpy(dest, src, list->elem_size);
 }
 
-// Copies final element to <dest>.
+// --------------------------------------------------------------- //
 void fllist_fetchLast(const fllist *const list, void *const dest)
 {
 	assume_ptrs(list, dest);
@@ -174,7 +175,7 @@ void fllist_fetchLast(const fllist *const list, void *const dest)
 	memcpy(dest, src, list->elem_size);
 }
 
-// Removes element <i>.
+// --------------------------------------------------------------- //
 void fllist_remove(fllist *const list, const unsigned i)
 {
 	assume_ptr(list);
@@ -192,7 +193,7 @@ void fllist_remove(fllist *const list, const unsigned i)
 	}
 }
 
-// Removes last element.
+// --------------------------------------------------------------- //
 void fllist_pop(fllist *const list)
 {
 	assume_ptr(list);
@@ -208,7 +209,7 @@ void fllist_pop(fllist *const list)
 	list->last = node;
 }
 
-// Removes first element.
+// --------------------------------------------------------------- //
 void fllist_popf(fllist *const list)
 {
 	if(!list->first)
@@ -218,7 +219,7 @@ void fllist_popf(fllist *const list)
 	free(node);
 }
 
-// Applies <func> to each element.
+// --------------------------------------------------------------- //
 void fllist_each(fllist *const list, void (*func)(void*))
 {
 	assume_ptr(list);
@@ -229,7 +230,7 @@ void fllist_each(fllist *const list, void (*func)(void*))
 	}
 }
 
-// Flips all next pointers, thereby reversing the list.
+// --------------------------------------------------------------- //
 void fllist_reverse(fllist *const list)
 {
 	assume_ptr(list);
@@ -248,7 +249,7 @@ void fllist_reverse(fllist *const list)
 	list->last  = node;
 }
 
-// Performs the bubblesort algorithm.
+// --------------------------------------------------------------- //
 void fllist_sort(fllist *const list, int (*cmp)(const void*, const void*))
 {
 	assume_ptrs(list, cmp);
@@ -284,7 +285,7 @@ void fllist_sort(fllist *const list, int (*cmp)(const void*, const void*))
 	} while(swap);
 }
 
-// Returns pointer to element <i>
+// --------------------------------------------------------------- //
 void *fllist_hook(const fllist *const list, const unsigned i)
 {
 	assume_ptr(list);
@@ -297,7 +298,7 @@ void *fllist_hook(const fllist *const list, const unsigned i)
 	return &node->data;
 }
 
-// Returns pointer to first element.
+// --------------------------------------------------------------- //
 void *fllist_hookHead(const fllist *const list)
 {
 	fllist_node *node = list->first;
@@ -306,7 +307,7 @@ void *fllist_hookHead(const fllist *const list)
 	return NULL;
 }
 
-// Returns pointer to final element.
+// --------------------------------------------------------------- //
 void *fllist_hookLast(const fllist *const list)
 {
 	fllist_node *node = list->last;
@@ -315,16 +316,14 @@ void *fllist_hookLast(const fllist *const list)
 	return NULL;
 }
 
-// Returns effective nodesize. This is required, since the void* within
-// listNode structures is used for alignment only. Element data begins at
-// the address of <data>, and extends on <elem_size> bytes.
+// --------------------------------------------------------------- //
 size_t fllist_nodeSize(const fllist *const list)
 {
 	assume_ptr(list);
 	return sizeof(fllist_node) - sizeof(void*) + list->elem_size;
 }
 
-// Returns element count.
+// --------------------------------------------------------------- //
 size_t fllist_size(const fllist *const list)
 {
 	assume_ptr(list);
