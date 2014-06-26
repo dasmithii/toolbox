@@ -23,11 +23,9 @@ void vector_popf(vector *const);
 void vector_pop(vector *const);
 void vector_clear(vector *const);
 void vector_set(vector *const, const unsigned, const void *const);
-
 void vector_each(vector *const, void (*)(void*));
 void vector_reverse(vector *const);
 void vector_sort(vector *const, int (*)(const void*, const void*));
-
 void vector_fetch(const vector *const, const unsigned, void *const);
 void vector_fetchLast(const vector *const, void *const);
 void vector_fetchHead(const vector *const, void *const);
