@@ -2,6 +2,11 @@ Baseline provides utilities for C-based software projects. These consist of data
 
 
 
+### Status
+This project is not finished yet (i.e. major data structures haven't yet been implemented). However, it is still functional and test-driven - usable, nonetheless.
+
+
+
 ### Installation
 1. Clone this repository.
 2. Enter its top-level directory.
