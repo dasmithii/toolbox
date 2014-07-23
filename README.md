@@ -3,16 +3,6 @@ Baseline provides utilities for C-based software projects. These consist of data
 
 
 
-## Installation
-```
-git clone https://github.com/dasmithii/Baseline.git
-cd Baseline
-cd build
-cmake ..
-make install
-```
-
-
 ## Quick Reference
 ##### Data Structures
 + Dynamic Array
@@ -28,3 +18,14 @@ make install
 + Debugging
 + Error-handling
 + File I/O
+
+
+
+## Installation
+```
+git clone https://github.com/dasmithii/Baseline.git
+cd Baseline
+cd build
+cmake ..
+make install
+```
