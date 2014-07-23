@@ -1,4 +1,4 @@
-#include "../src/memory.h"
+#include "../sources/memory.h"
 #include "greatest.h"
 
 TEST memory_swap(){

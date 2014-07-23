@@ -1,4 +1,4 @@
-#include "../src/fllist.h"
+#include "../sources/fllist.h"
 #include "greatest.h"
 
 #define SETUP_FLLIST()              \

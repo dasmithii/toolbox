@@ -1,4 +1,4 @@
-#include "../src/array.h"
+#include "../sources/array.h"
 #include "greatest.h"
 
 

@@ -1,5 +1,5 @@
 #include "greatest.h"
-#include "../src/vector.h"
+#include "../sources/vector.h"
 
 #define SETUP_VEC()                    \
     vector vec;                     \
