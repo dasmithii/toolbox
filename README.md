@@ -14,8 +14,8 @@ This project is not finished yet (i.e. major data structures haven't yet been im
 4. Install libraries globally.
 ```
 git clone https://github.com/dasmithii/Baseline.git
-cd Baseline
-cmake .
+cd Baseline/build
+cmake ..
 make install
 ```
 
