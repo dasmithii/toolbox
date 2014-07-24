@@ -1,4 +1,8 @@
 #include "fllist.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include "debug.h"
 
 // --------------------------------------------------------------- //
 static fllist_node *fllist_node_hookNode(fllist_node *node, const unsigned i)

@@ -1,4 +1,6 @@
 #include "memory.h"
+#include <string.h>
+#include "debug.h"
 
 // ---------------------------------------------------------- //
 void swap(void *const addr1

@@ -1,4 +1,7 @@
 #include "array.h"
+#include <string.h>
+#include "debug.h"
+#include "memory.h"
 
 // --------------------------------------------------------------- //
 int array_init(array *const arr

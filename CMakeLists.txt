@@ -12,7 +12,7 @@ file(GLOB_RECURSE src_files
   "sources/*.h"
   "sources/*.c"
 )
-add_library(baseline STATIC ${src_files} PREFIX "")
+add_library(baseline STATIC ${src_files})
 
 # Build test executable.
 file(GLOB_RECURSE test_files

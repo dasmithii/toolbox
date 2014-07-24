@@ -1,9 +1,7 @@
 #ifndef _BASELINE_ARRAY_
 #define _BASELINE_ARRAY_
-#include <string.h>
 #include <stdlib.h>
-#include "debug.h"
-#include "memory.h"
+
 
 typedef struct {
 	size_t num_elems;

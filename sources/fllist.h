@@ -1,10 +1,7 @@
 #ifndef _FLUX_LINKED_LIST_UTILITY_
 #define _FLUX_LINKED_LIST_UTILITY_
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "debug.h"
+
 
 
 // Represents one item in the linked list.

@@ -1,4 +1,5 @@
 #include "../sources/array.h"
+#include "../sources/memory.h"
 #include "greatest.h"
 
 

@@ -1,4 +1,7 @@
 #include "vector.h"
+#include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 #define DEFAULT_CAPACITY 25
 
 // --------------------------------------------------------------- //

@@ -1,9 +1,6 @@
 #ifndef _BASELINE_VECTOR_
 #define _BASELINE_VECTOR_
-#include "debug.h"
 #include "array.h"
-#include <stdlib.h>
-#include <string.h>
 
 // Stores a contiguous, dynamically-sized array of elements. 
 typedef struct {

@@ -1,8 +1,6 @@
 #ifndef _BASELINE_MEMORY_UTILITIES_
 #define _BASELINE_MEMORY_UTILITIES_
-#include <string.h>
 #include <stdlib.h>
-#include "debug.h"
 
 
 // Swaps n-sized blocks of memory at given addresses.
