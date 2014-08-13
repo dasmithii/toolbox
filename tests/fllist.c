@@ -1,5 +1,6 @@
+#include "common.h"
 #include "../sources/fllist.h"
-#include "greatest.h"
+#include <kit/greatest/greatest.h>
 
 #define SETUP_FLLIST()              \
     fllist list;                    \

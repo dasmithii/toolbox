@@ -1,5 +1,6 @@
+#include "common.h"
 #include "../sources/memory.h"
-#include "greatest.h"
+#include <kit/greatest/greatest.h>
 
 TEST memory_swap(){
 	int data[2] = {5, 10};
