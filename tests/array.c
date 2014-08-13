@@ -1,7 +1,7 @@
 #include "common.h"
 #include "../sources/array.h"
 #include "../sources/memory.h"
-#include <kit/greatest/greatest.h>
+#include <kit/greatest.h>
 
 
 #define SETUP_ARRAY() \

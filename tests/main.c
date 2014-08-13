@@ -1,4 +1,4 @@
-#include <kit/greatest/greatest.h>
+#include <kit/greatest.h>
 extern SUITE(array_suite);
 extern SUITE(memory_suite);
 extern SUITE(fllist_suite);
