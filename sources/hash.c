@@ -1,336 +1,211 @@
-// #include "hash.h"
-// #define DEFAULT_CAPACITY 25
+#include <string.h>
+#include "hash.h"
+#include "debug.h"
+#define DEFAULT_BUCKET_COUNT 100
 
-// #define MAX_ALIGN 16
-// #define ALIGNMENT(size) ((size) > MAX_ALIGN? MAX_ALIGN : mult2Alignment(size))
-// #define ALIGN_TO(size, to) (((size) - ((size) - 1) % (to)) - 1 + (to))
 
-// #define PTR_SIZE sizeof(fx_HashNode*)
-// #define KEY_OFFSET(hash) ALIGN_TO(PTR_SIZE, ALIGNMENT((hash->key_size)))
-// #define VAL_OFFSET(hash) ALIGN_TO(KEY_OFFSET(hash) + hash->key_size, hash->val_size)
+static size_t bucketIndex(const Hash *self, const void *key)
+{
+	assume_ptr(self);
+	uint32_t hash = self->hash(key);
+	return hash % self->bucketCount;
+}
 
-// #define KEY_PTR(hash, node) (void*) (((char*) node) + KEY_OFFSET(hash))
-// #define VAL_PTR(hash, node) (void*) (((char*) node) + VAL_OFFSET(hash))
-// #define NODE_SIZE(hash) (VAL_OFFSET(hash) + hash->val_size)
 
-// // Finds maximum multiple of two <= size.
-// static size_t mult2Alignment(const size_t size)
-// {
-// 	size_t ret = 2;
-// 	while(ret <= size)
-// 		ret <<= 1;
-// 	ret >>= 1;
-// 	return ret;
-// }
+static HashNode *hookBucket(const Hash *self, const void *key)
+{
+	assume_ptr(self);
+	size_t index = bucketIndex(self, key);
+	return self->buckets[index];
+}
 
-// // Creates a HashNode with <key> and <val> according to <hash>'s
-// // configuration.
-// static fx_HashNode *fx_HashNode_from(const fx_Hash *const hash, const void *const key, const void *const val)
-// {
-// 	fx_checkPtr3(hash, key, val);
-// 	fx_HashNode *ret = malloc(NODE_SIZE(hash));
-// 	if(!ret)
-// 		return NULL;
 
-// 	ret->next = NULL;
-// 	memcpy(KEY_PTR(hash, ret), key, hash->key_size);
-// 	memcpy(VAL_PTR(hash, ret), val, hash->val_size);
-// 	return ret;
-// }
+static HashNode *hookNode(const Hash *self, const void *key)
+{
+	HashNode *node = hookBucket(self, key);
+	while(node){
+		if(self->cmp(key, node->key) == 0)
+			return node;
+		node = node->next;
+	}
+	return NULL;
+}
 
-// // Removes all all elements stored beyond or within <node> in LL.
-// static void fx_HashNode_free(fx_HashNode *node)
-// {
-// 	while(node){
-// 		fx_HashNode *tmp = node->next;
-// 		free(node);
-// 		node = tmp;
-// 	}
-// }
 
-// // Removes all entries stored in bucket <i>.
-// static void fx_Hash_freeBucket(fx_Hash *const hash, const unsigned i)
-// {
-// 	fx_HashNode_free(hash->buckets[i]);
-// 	hash->buckets[i] = NULL;
-// }
+static void freeNode(HashNode *self)
+{
+	assume_ptr(self);
+	assume_ptrs(self->key, self->value);
+	free(self->key);
+	free(self->value);
+	free(self);
+}
 
-// // Jenkins's one-at-a-time hash (from http://en.wikipedia.org/wiki/Jenkins_hash_function#cite_note-dobbs-2).
-// static uint32_t fx_Hash_default(const char *const key, const size_t len)
-// {
-// 	uint32_t hash, i;
-//     for(hash = i = 0; i < len; ++i)
-//     {
-//         hash += key[i];
-//         hash += (hash << 10);
-//         hash ^= (hash >> 6);
-//     }
-//     hash += (hash << 3);
-//     hash ^= (hash >> 11);
-//     hash += (hash << 15);
-//     return hash;
-// }
 
-// uint32_t fx_StrHash(const void *str)
-// {
-// 	fx_checkPtr(str);
-// 	return fx_Hash_default((char*) str, strlen(str));
-// }
+static void freeBucket(HashNode *self)
+{
+	while(self){
+		HashNode *temp = self->next;
+		freeNode(self);
+		self = temp;
+	}
+}
 
-// int fx_StrCmp(const void *a, const void *b)
-// {
-// 	fx_checkPtrs(a, b);
-// 	return strcmp((char*) a, (char*) b);
-// }
 
-// // Computes hash value for specified key.
-// static uint32_t fx_Hash_hash(const fx_Hash *const hash, const void *const key)
-// {
-// 	if(hash->hash)
-// 		return hash->hash(key);
-// 	return fx_Hash_default((char*) key, hash->key_size);
-// }
+static void squeezeNext(HashNode *self)
+{
+	assume_ptr(self);
+	HashNode *next = self->next;
+	if(next){
+		self->next = next->next;
+		freeNode(next);
+	}
+}
 
-// static int fx_Hash_cmp(const fx_Hash *const hash, const void *const a, const void *const b)
-// {
-// 	fx_checkPtr3(hash, a, b);
-// 	if(hash->cmp)
-// 		return hash->cmp(a,b);
-// 	else
-// 		return memcmp(a,b,hash->key_size);
-// }
 
-// // Gets bucket index for given key.
-// static size_t fx_Hash_index(const fx_Hash *const hash, const void *const key)
-// {
-// 	unsigned raw = fx_Hash_hash(hash, key);
-// 	return (size_t) raw % hash->num_buckets;
-// }
+static void clearBucket(Hash *self, size_t i)
+{
+	HashNode *node = self->buckets[i];
+	while(node){
+		HashNode *temp = node->next;
+		freeNode(node);
+		self->entryCount--;
+		node = temp;
+	}
+	self->buckets[i] = NULL;
+}
 
-// static fx_HashNode *fx_Hash_hookNode(const fx_Hash *const hash, const void *const key)
-// {
-// 	fx_checkPtrs(hash, key);
 
-// 	size_t i = fx_Hash_index(hash, key);
-// 	fx_HashNode *ret = hash->buckets[i];
-// 	while(ret){
-// 		if(!fx_Hash_cmp(hash, KEY_PTR(hash, ret), key))
-// 			return ret;
-// 		ret = ret->next;
-// 	}
-// 	return NULL;
-// }
+static HashNode *newNode(Hash *hash, const void *key, const void *value)
+{
+	HashNode *ret = malloc(sizeof(HashNode));
+	if(!ret)
+		return NULL;
+	ret->next = NULL;
+	ret->key = malloc(hash->keySize);
+	ret->value = malloc(hash->valueSize);
+	if(!ret->key || !ret->value){
+		free(ret);
+		return NULL;
+	}
+	memmove(ret->key, key, hash->keySize);
+	memmove(ret->value, value, hash->valueSize);
+	return ret;
+}
 
-// // Expands to have <n> buckets.
-// static int fx_Hash_expandTo(fx_Hash *const hash, const size_t n)
-// {
-// 	fx_checkPtr(hash);
 
-// 	// try allocating new buckets
-// 	fx_HashNode **buckets = hash->buckets;
-// 	size_t num_buckets = hash->num_buckets;
-// 	size_t num_entries = hash->num_entries;
+static int bucketInsert(Hash *self, size_t i, const void *key, const void *value)
+{
+	HashNode *node = self->buckets[i];
+	while(node->next){
+		if(self->cmp(key, node->key) == 0){
+			memmove(node->value, value, self->valueSize);
+			return 0;
+		}
+		node = node->next;
+	}
+	node->next = newNode(self, key, value);
+	return node->next? 0:1;
+}
 
-// 	hash->num_buckets = n;
-// 	hash->num_entries = 0;
-// 	hash->buckets = calloc(n, sizeof(fx_HashNode*));
-// 	if(!hash->buckets)
-// 		goto error;
 
-// 	// try storing old key-value pairs again
-// 	for(int i = 0; i < num_buckets; ++i){
-// 		fx_HashNode *node = buckets[i];
-// 		while(node){
-// 			if(fx_Hash_put(hash, KEY_PTR(hash, node), VAL_PTR(hash, node)))
-// 				goto error;
-// 			node = node->next;
-// 		}
-// 		fx_HashNode_free(buckets[i]);
-// 	}
-// 	free(buckets);
-// 	return 0;
+int Hash_init(Hash *self
+	        , size_t keySize
+	        , size_t valueSize
+	        , HashFunction hash
+	        , CompareFunction cmp)
+{
+	assume_ptr(self);
+	self->buckets = calloc(DEFAULT_BUCKET_COUNT, sizeof(HashNode*));
+	if(!self->buckets)
+		return 1;
+	self->bucketCount = DEFAULT_BUCKET_COUNT;
+	self->entryCount  = 0;
+	self->keySize = keySize;
+	self->valueSize = valueSize;
+	self->hash = hash;
+	self->cmp = cmp;
+	return 0;
+}
 
-// error:
-// 	hash->buckets = buckets;
-// 	hash->num_buckets = num_buckets;
-// 	hash->num_entries = num_entries;
-// 	return -1;
-// }
+void Hash_clear(Hash *self)
+{
+	assume_ptr(self);
+	for(int i = 0; i < self->bucketCount; ++i)
+		clearBucket(self, i);
+}
 
-// // (buckets + 1) *= 2
-// static int fx_Hash_expand(fx_Hash *const hash)
-// {
-// 	size_t size = hash->num_buckets;
-// 	++size;
-// 	return fx_Hash_expandTo(hash, 2 * size);
-// }
 
-// static void fx_Hash_contract(fx_Hash *const hash)
-// {
-// 	size_t size = hash->num_buckets / 2;
-// 	if(!size)
-// 		++size;
-// 	fx_Hash_expandTo(hash, size);
-// }
+void Hash_clean(Hash *self)
+{
+	assume_ptr(self);
+	Hash_clear(self);
+	free(self->buckets);
+	self->buckets = NULL;
+	self->bucketCount = 0;
+}
 
-// static void fx_Hash_checkExpand(fx_Hash *const hash)
-// {
-// 	float ratio = (float) hash->num_entries / (float) hash->num_buckets;
-// 	if(ratio > .75)
-// 		fx_Hash_expand(hash);
-// }
 
-// static void fx_Hash_checkContract(fx_Hash *const hash)
-// {
-// 	float ratio = (float) hash->num_entries / (float) hash->num_buckets;
-// 	if(ratio < .05  &&  hash->num_buckets < DEFAULT_CAPACITY)
-// 		fx_Hash_contract(hash);
-// }
+int Hash_insert(Hash *self, const void *key, const void *value)
+{
+	size_t i = bucketIndex(self, key);
+	if(!self->buckets[i]){
+		self->buckets[i] = newNode(self, key, value);
+		return self->buckets[i]? 0:1;
+	}
+	return bucketInsert(self, i, key, value);
+}
 
-// // Initialize hash.
-// int fx_Hash_init(fx_Hash *const hash, const size_t ks, const size_t vs)
-// {
-// 	fx_checkPtr(hash);
-// 	hash->num_entries = 0;
-// 	hash->num_buckets = DEFAULT_CAPACITY;
-// 	hash->key_size = ks;
-// 	hash->val_size = vs;
-// 	hash->hash = NULL;
-// 	hash->cmp  = NULL;
-// 	hash->buckets = calloc(DEFAULT_CAPACITY, sizeof(fx_HashNode*));
-// 	return hash->buckets? 0:1;
-// }
 
-// // Sets internal hash function. NULL results in the default.
-// void fx_Hash_setHash(fx_Hash *const hash, uint32_t (*func)(const void*))
-// {
-// 	fx_checkPtr(hash);
-// 	hash->hash = func;
-// }
+bool Hash_contains(const Hash *self, const void *key)
+{
+	return hookNode(self, key)? true:false;
+}
 
-// // Sets the comparison function. By default, this is the standard memcmp().
-// void fx_Hash_setCmp(fx_Hash *const hash, int (*func)(const void*, const void*))
-// {
-// 	fx_checkPtr(hash);
-// 	hash->cmp = func;
-// }
 
-// // Remove all elements. Buckets are left intact.
-// void fx_Hash_clear(fx_Hash *const hash)
-// {
-// 	fx_checkPtr(hash);
-// 	for(int i = 0; i < hash->num_buckets; ++i)
-// 		if(hash->buckets[i])
-// 			fx_Hash_freeBucket(hash, i);
-// 	hash->num_entries = 0;
-// }
+void Hash_remove(Hash *self, const void *key)
+{
+	size_t i = bucketIndex(self, key);
+	HashNode *node = self->buckets[i];
+	if(node){
+		if(self->cmp(key, node->key) == 0){
+			clearBucket(self, i);
+		} else {
+			while(node->next){
+				if(self->cmp(key, node->next->key) == 0){
+					squeezeNext(node);
+					self->entryCount--;
+					return;
+				}
+			}
+		}
+	}
+}
 
-// // Clears hash and deallocates all internal memory. Renders
-// // object invalid for future use.
-// void fx_Hash_clean(fx_Hash *const hash)
-// {
-// 	fx_checkPtr(hash);
-// 	fx_Hash_clear(hash);
-// 	free(hash->buckets);
-// 	hash->num_buckets = 0;
-// }
 
-// // Inserts key-value pair. If key already exists, replaces its
-// // associated value.
-// int fx_Hash_put(fx_Hash *const hash, const void *const key, const void *const val)
-// {
-// 	fx_checkPtr3(hash, key, val);
-// 	fx_Hash_checkExpand(hash);
+void *Hash_hook(const Hash *self, const void *key)
+{
+	HashNode *node = hookNode(self, key);
+	return node? node->value:NULL;
+}
 
-// 	size_t i = fx_Hash_index(hash, key);
-// 	fx_HashNode *next = fx_HashNode_from(hash, key, val);
-// 	if(!next)
-// 		return -1;
 
-// 	fx_HashNode *node = hash->buckets[i];
-// 	if(node){
-// 		while(node->next){
-// 			int cmp = fx_Hash_cmp(hash, KEY_PTR(hash, node), key);
-// 			if(cmp == 0){
-// 				memmove(VAL_PTR(hash, node), val, hash->val_size);
-// 				free(next);
-// 				return 0;
-// 			}
-// 			node = node->next;
-// 		}
-// 		node->next = next;
-// 	} else {
-// 		hash->buckets[i] = next;
-// 	}
-// 	hash->num_entries++;
-// 	return 0;
-// }
+void Hash_fetch(const Hash *self, const void *key, void *dest)
+{
+	assume_ptrs(self, dest);
+	void *from = Hash_hook(self, key);
+	memmove(dest, from, self->valueSize);
+}
 
-// // Checks for existance of <key>.
-// bool fx_Hash_has(const fx_Hash *const hash, const void *const key)
-// {
-// 	fx_checkPtrs(hash, key);
-// 	return fx_Hash_hook(hash, key)? true:false;
-// }
 
-// // Removes <key>-value pair. If not existant, does nothing.
-// void fx_Hash_rem(fx_Hash *const hash, const void *const key)
-// {
-// 	fx_checkPtrs(hash, key);
-// 	fx_Hash_checkContract(hash);
+void Hash_forEach(Hash *self, void (*func)(const void*, void*))
+{
+	for(int i = 0; i < self->bucketCount; ++i){
+		HashNode *node = self->buckets[i];
+		while(node){
+			func(node->key, node->value);
+			node = node->next;
+		}
+	}
+}
 
-// 	int i = fx_Hash_index(hash, key);
-// 	fx_HashNode *prev = NULL
-// 			  , *node = hash->buckets[i];
-// 	while(node){
-// 		if(!fx_Hash_cmp(hash, KEY_PTR(hash, node), key)){
-// 			if(prev){
-// 				prev->next = node->next;
-// 				free(node);
-// 			} else {
-// 				hash->buckets[i] = NULL;
-// 				free(node);
-// 			}
-// 			hash->num_entries--;
-// 			return;
-// 		}
-// 		prev = node;
-// 		node = node->next;
-// 	}
-// }
-
-// // Returns pointer to raw data.
-// void *fx_Hash_hook(const fx_Hash *const hash, const void *const key)
-// {
-// 	fx_checkPtrs(hash, key);
-
-// 	fx_HashNode *node = fx_Hash_hookNode(hash, key);
-// 	if(!node)
-// 		return NULL;
-// 	return VAL_PTR(hash, node);
-// }
-
-// // Moves data value to address <to>. If key isn't found, does nothing.
-// int fx_Hash_fetch(const fx_Hash *const hash, const void *const key, void *const to)
-// {
-// 	void *data = fx_Hash_hook(hash, key);
-// 	if(data){
-// 		memmove(to, data, hash->val_size);
-// 		return 0;
-// 	}
-// 	return -1;
-// }
-
-// // Applies <func> to all key-value pairs in hash.
-// void fx_Hash_forEach(fx_Hash *const hash, void (*func)(const void*, void*))
-// {
-// 	fx_checkPtrs(hash, func);
-
-// 	for(int i = 0; i < hash->num_buckets; ++i){
-// 		fx_HashNode *node = hash->buckets[i];
-// 		while(node){
-// 			func(KEY_PTR(hash, node), VAL_PTR(hash, node));
-// 			node = node->next;
-// 		}
-// 	}
-// }
