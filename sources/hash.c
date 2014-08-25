@@ -208,4 +208,3 @@ void Hash_forEach(Hash *self, void (*func)(const void*, void*))
 		}
 	}
 }
-

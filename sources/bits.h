@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 
-#define GET_BIT(b, i) ((b & (1<<(n))) >> (n))
+#define GET_BIT(n, i) ((n) & (1 << (i)) >> i)? true:false
 
 
 #define SET_BIT(n, i, v) \
@@ -17,6 +17,10 @@
 
 #define CLEAR_BIT(n,i)\
 	n &= ~(1 << i)
+
+
+#define TOGGLE_BIT(n, i)\
+	SET_BIT(n, i, !(GET_BIT(n, i)))
 
 
 #endif
