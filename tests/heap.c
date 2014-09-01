@@ -26,12 +26,12 @@ static int simpleCompare(const void *p1, const void *p2)
 
 TEST Heap_basic_test() 
 {
-    #define N 100
+    unsigned n = 100;
 	SETUP_HEAP();
-    for(int i = 0; i < N; ++i)
+    for(int i = 0; i < n; ++i)
         Heap_insert(&heap, &i);
-    ASSERT_EQ(N, heap.elementCount);
-    for(int i = 0; i < N; ++i){
+    ASSERT_EQ(n, heap.elementCount);
+    for(int i = 0; i < n; ++i){
         int v;
         Heap_fetchTop(&heap, &v);
         Heap_removeTop(&heap);
