@@ -33,5 +33,11 @@ void Array_printContents(Array *self);
 
 
 
+# Common Functionality
+Many data structures are operated on similarly, and it's best to capitalize on similarity with naming conventions. Here are some widely-used terms, where X is an arbitrary type name.
+1. X_init(X *self)
+2. X_clean(X *self)
+3. X_hook(X *self, size_t i)
+4. X_fetch(X *self, size_t i, void *destination)
 
 
