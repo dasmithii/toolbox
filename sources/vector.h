@@ -6,7 +6,7 @@
 typedef struct {
 	array buffer;
 	size_t size;
-} vector;
+} BLVector;
 
 // Initializer & cleaner.
 int vector_init(vector *const, const size_t);
