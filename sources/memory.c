@@ -3,9 +3,9 @@
 #include "debug.h"
 
 // ---------------------------------------------------------- //
-void swap(void *const addr1
-	    , void *const addr2
-	    , const size_t size)
+void swap(const void *addr1
+	    , const void *addr2
+	    , size_t size)
 {
 	assume_ptrs(addr1, addr2);
 	char *ptr1 = (char*) addr1;
@@ -26,8 +26,8 @@ void reverse(const void *const addr
 	assume_ptr(addr);
 	assume_nzero(elem_size);
 	for(int i = 0; i < num_elems / 2; ++i){
-		void *const p1 = block_index(addr, i, elem_size);
-		void *const p2 = block_index(addr, num_elems - i - 1, elem_size);
+		void *const p1 = blockIndex(addr, i, elem_size);
+		void *const p2 = blockIndex(addr, num_elems - i - 1, elem_size);
 		swap(p1, p2, elem_size);
 	}
 }
@@ -41,13 +41,13 @@ void *offset(const void *const addr
 }
 
 // ---------------------------------------------------------- //
-void *block_index(const void *const addr
-             , const size_t block_index
+void *blockIndex(const void *const addr
+             , const size_t index
              , const size_t elem_size)
 {
 	assume_ptr(addr);
 	assume_pos(elem_size);
-	return offset(addr, elem_size * block_index);
+	return offset(addr, elem_size * index);
 }
 
 // ---------------------------------------------------------- //
@@ -59,14 +59,14 @@ void zero(void *const addr
 }
 
 // ---------------------------------------------------------- //
-void safe_free(void *const ptr){
+void safeFree(void *const ptr){
 	if(ptr)
 		free(ptr);
 }
 
 // ---------------------------------------------------------- //
-void *clone_bytes(const void *const ptr
-	              , const size_t bytes){
+void *cloneBytes(const void *const ptr
+	           , const size_t bytes){
 	assume_ptr(ptr);
 	void *const ret = malloc(bytes);
 	if(!ret)

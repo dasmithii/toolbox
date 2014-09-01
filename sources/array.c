@@ -4,11 +4,11 @@
 #include "memory.h"
 
 // --------------------------------------------------------------- //
-int array_init(array *const arr
+int Array_init(Array *const arr
 	            , const size_t num_elems
 	            , const size_t elem_size){
 	assume_ptr(arr);
-	assume_m(elem_size > 0, "Non-positive array element size.");
+	assume_m(elem_size > 0, "Non-positive Array element size.");
 	arr->num_elems = num_elems;
 	arr->elem_size = elem_size;
 	arr->data = calloc(num_elems, elem_size);
@@ -16,31 +16,31 @@ int array_init(array *const arr
 }
 
 // --------------------------------------------------------------- //
-void array_clean(array *const arr){
+void Array_clean(Array *const arr){
 	assume_ptr(arr);
 	if(arr->data)
 		free(arr->data);
 }
 
 // --------------------------------------------------------------- //
-array *array_new(const size_t num_elems
+Array *Array_new(const size_t num_elems
 	                 , const size_t elem_size){
-	array *ret = malloc(sizeof(array));
+	Array *ret = malloc(sizeof(Array));
 	if(!ret)
 		return NULL;
-	array_init(ret, num_elems, elem_size);
+	Array_init(ret, num_elems, elem_size);
 	return ret;
 }
 
 // --------------------------------------------------------------- //
-void array_free(array *const arr){
+void Array_free(Array *const arr){
 	assume_ptr(arr);
-	array_clean(arr);
+	Array_clean(arr);
 	free(arr);
 }
 
 // --------------------------------------------------------------- //
-void *array_hook(const array *const arr
+void *Array_hook(const Array *const arr
 	              , const size_t i){
 	assume_ptr(arr);
 	assume_m(i < arr->num_elems, "Index out of bounds.");
@@ -48,63 +48,63 @@ void *array_hook(const array *const arr
 }
 
 // --------------------------------------------------------------- //
-void array_set(array *const arr
+void Array_set(Array *const arr
 	            , const size_t i
 	            , const void *const ptr){
 	assume_ptrs(arr, ptr);
 	assume_m(i < arr->num_elems, "Index out of bounds.");
-	memmove(array_hook(arr, i), ptr, arr->elem_size);
+	memmove(Array_hook(arr, i), ptr, arr->elem_size);
 }
 
 // --------------------------------------------------------------- //
-void array_fetch(const array *const arr
+void Array_fetch(const Array *const arr
 	              , const size_t i
 	              , void *const dest){
 	assume_ptrs(arr, dest);
-	memmove(dest, array_hook(arr, i), arr->elem_size);
+	memmove(dest, Array_hook(arr, i), arr->elem_size);
 }
 
 // --------------------------------------------------------------- //
-void array_zero(array *const arr){
+void Array_zero(Array *const arr){
 	assume_ptr(arr);
 	memset(arr->data, 0, arr->elem_size * arr->num_elems);
 }
 
 // --------------------------------------------------------------- //
-void array_fill(array *const arr
+void Array_fill(Array *const arr
 	              , const void *const val){
 	assume_ptrs(arr, val);
 	for(int i = 0; i < arr->num_elems; ++i)
-		array_set(arr, i, val);
+		Array_set(arr, i, val);
 }
 
 // --------------------------------------------------------------- //
-void array_reverse(array *const arr){
+void Array_reverse(Array *const arr){
 	assume_ptr(arr);
 	for(int i = 0; i < arr->num_elems / 2; ++i){
-		void *const p1 = array_hook(arr, i);
-		void *const p2 = array_hook(arr, arr->num_elems - 1 - i);
+		void *const p1 = Array_hook(arr, i);
+		void *const p2 = Array_hook(arr, arr->num_elems - 1 - i);
 		swap(p1, p2, arr->elem_size);
 	}
 }
 
 // --------------------------------------------------------------- //
-void array_sort(array *const arr
+void Array_sort(Array *const arr
 	             , int (*cmp)(const void*, const void*)){
 	assume_ptrs(arr, cmp);
 	qsort(arr->data, arr->num_elems, arr->elem_size, cmp);
 }
 
 // --------------------------------------------------------------- //
-void array_each(array *const arr
+void Array_each(Array *const arr
 	             , void (*func)(void*)){
 	for(int i = 0; i < arr->num_elems; ++i)
-		func(array_hook(arr, i));
+		func(Array_hook(arr, i));
 }
 
 // --------------------------------------------------------------- //
-int array_copy(const array *const src
-	            , array *const dest){
+int Array_copy(const Array *const src
+	            , Array *const dest){
 	assume_ptrs(src, dest);
 	dest->num_elems = src->num_elems;
 	dest->elem_size = src->elem_size;
@@ -116,11 +116,11 @@ int array_copy(const array *const src
 }
 
 // --------------------------------------------------------------- //
-array *array_clone(const array *const arr){
-	array *ret = malloc(sizeof(array));
+Array *Array_clone(const Array *const arr){
+	Array *ret = malloc(sizeof(Array));
 	if(!ret)
 		return NULL;
-	int rc = array_copy(arr, ret);
+	int rc = Array_copy(arr, ret);
 	if(rc){
 		free(ret);
 		return NULL;
@@ -129,12 +129,12 @@ array *array_clone(const array *const arr){
 }
 
 // --------------------------------------------------------------- //
-size_t array_innerSize(const array *const arr){
+size_t Array_innerSize(const Array *const arr){
 	return arr->elem_size * arr->num_elems;
 }
 
 // --------------------------------------------------------------- //
-int array_setCapacity(array *const arr, const size_t elems)
+int Array_setCapacity(Array *const arr, const size_t elems)
 {
 	void *np = realloc(arr->data, arr->elem_size * elems);
 	if(!np)

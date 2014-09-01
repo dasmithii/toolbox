@@ -32,11 +32,11 @@ TEST memory_offset(){
 	PASS();
 }
 
-TEST memory_block_index(){
+TEST memory_blockIndex(){
 	int i = 4;
 	int *p1 = &i;
 	int *p2 = p1 + 5;
-	int *p3 = block_index(p1, 5, sizeof(int));
+	int *p3 = blockIndex(p1, 5, sizeof(int));
 	ASSERT_EQ(p2, p3);
 	PASS();
 }
@@ -53,6 +53,6 @@ GREATEST_SUITE(memory_suite){
 	RUN_TEST(memory_swap);
 	RUN_TEST(memory_reverse);
 	RUN_TEST(memory_offset);
-	RUN_TEST(memory_block_index);
+	RUN_TEST(memory_blockIndex);
 	RUN_TEST(memory_zero);
 }

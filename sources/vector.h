@@ -4,34 +4,34 @@
 
 // Stores a contiguous, dynamically-sized array of elements. 
 typedef struct {
-	array buffer;
+	Array buffer;
 	size_t size;
-} BLVector;
+} Vector;
 
 // Initializer & cleaner.
-int vector_init(vector *const, const size_t);
-void vector_clean(vector *const);
-int vector_append(vector *const, const void *const);
-int vector_prepend(vector*const, const void *const);
-int vector_insert(vector *const, const unsigned, const void *const);
-void vector_remove(vector *const, const int);
-vector *vector_clone(const vector *const);
-void vector_popf(vector *const);
-void vector_pop(vector *const);
-void vector_clear(vector *const);
-void vector_set(vector *const, const unsigned, const void *const);
-void vector_each(vector *const, void (*)(void*));
-void vector_reverse(vector *const);
-void vector_sort(vector *const, int (*)(const void*, const void*));
-void vector_fetch(const vector *const, const unsigned, void *const);
-void vector_fetchLast(const vector *const, void *const);
-void vector_fetchHead(const vector *const, void *const);
-void *vector_hook(const vector *const, const unsigned);
-void *vector_hookLast(const vector *const);
-void *vector_hookHead(const vector *const);
-int vector_setCapacity(vector *const, const size_t);
-int vector_reserve(vector *const, const size_t);
-int vector_expand(vector *const);
-int vector_contract(vector *const);
+int Vector_init(Vector *const, const size_t);
+void Vector_clean(Vector *const);
+int Vector_append(Vector *const, const void *const);
+int Vector_prepend(Vector*const, const void *const);
+int Vector_insert(Vector *const, const unsigned, const void *const);
+void Vector_remove(Vector *const, const int);
+Vector *Vector_clone(const Vector *const);
+void Vector_popf(Vector *const);
+void Vector_pop(Vector *const);
+void Vector_clear(Vector *const);
+void Vector_set(Vector *const, const unsigned, const void *const);
+void Vector_each(Vector *const, void (*)(void*));
+void Vector_reverse(Vector *const);
+void Vector_sort(Vector *const, int (*)(const void*, const void*));
+void Vector_fetch(const Vector *const, const unsigned, void *const);
+void Vector_fetchLast(const Vector *const, void *const);
+void Vector_fetchHead(const Vector *const, void *const);
+void *Vector_hook(const Vector *const, const unsigned);
+void *Vector_hookLast(const Vector *const);
+void *Vector_hookHead(const Vector *const);
+int Vector_setCapacity(Vector *const, const size_t);
+int Vector_reserve(Vector *const, const size_t);
+int Vector_expand(Vector *const);
+int Vector_contract(Vector *const);
 
 #endif
