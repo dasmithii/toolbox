@@ -210,3 +210,12 @@ void Heap_fetchTop(Heap *self
 	memcpy(destination, self->data, self->elementSize);
 }
 
+
+void Heap_foreach(Heap *self, void (*function)(const void *))
+{
+	for(int i = 0; i < self->elementCount; ++i){
+		const void *addr = heapItemAddress(self, i);
+		function(addr);
+	}
+}
+

@@ -39,6 +39,10 @@ void Heap_fetchTop(Heap *self
 	             , void *destination);
 
 
+// Applies function to all elements. This function should not
+// mutate data, as that will invalidate the heap.
+void Heap_foreach(Heap *self, void (*function)(const void *));
+
 
 void Heap_test();
 #endif
