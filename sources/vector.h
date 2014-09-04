@@ -11,6 +11,8 @@ typedef struct {
 // Initializer & cleaner.
 int Vector_init(Vector *const, const size_t);
 void Vector_clean(Vector *const);
+
+
 int Vector_append(Vector *const, const void *const);
 int Vector_prepend(Vector*const, const void *const);
 int Vector_insert(Vector *const, const unsigned, const void *const);
