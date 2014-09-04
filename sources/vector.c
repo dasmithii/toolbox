@@ -220,7 +220,6 @@ int Vector_reserve(Vector * const vec, const size_t n)
 {
 	assume_ptr(vec);
 	assume_pos(n);
-
 	if(vec->buffer.num_elems < n)
 		return Vector_setCapacity(vec, n);
 	return 0;
@@ -229,10 +228,12 @@ int Vector_reserve(Vector * const vec, const size_t n)
 // --------------------------------------------------------------- //
 void Vector_set(Vector *const vec, const unsigned i, const void *const elem)
 {
-	assume_ptrs(vec, elem);
 	assume_max(i, vec->size);
 	void *dest = Vector_hook(vec, i);
-	memcpy(dest, elem, vec->buffer.elem_size);
+	if(elem)
+		memcpy(dest, elem, vec->buffer.elem_size);
+	else
+		memset(dest, 0, vec->buffer.elem_size);
 }
 
 // --------------------------------------------------------------- //

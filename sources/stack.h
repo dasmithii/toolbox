@@ -13,6 +13,7 @@ typedef Vector Stack;
 #define Stack_fetchTop(self, addr)  Vector_fetchLast(self, addr)
 #define Stack_size(self)            ((self)->size)
 #define Stack_isEmpty(self)         (Stack_size(self)? true:false)
+#define Stack_clear(self)           Vector_clear(self)
 
 
 #endif
