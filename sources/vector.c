@@ -274,5 +274,9 @@ void Vector_sort(Vector *const vec, int (*cmp)(const void*, const void*))
 void *Vector_toBuffer(const Vector *self)
 {
 	size_t size = self->size * self->buffer.elem_size;
-	return strndup(self->buffer.data, size);
+	void *ret = malloc(size);
+	if(!ret)
+		return NULL;
+	memcpy(ret, self->buffer.data, size);
+	return ret;
 }
