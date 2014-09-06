@@ -269,3 +269,10 @@ void Vector_sort(Vector *const vec, int (*cmp)(const void*, const void*))
 {
 	Array_sort(&vec->buffer, cmp);
 }
+
+
+void *Vector_toBuffer(const Vector *self)
+{
+	size_t size = self->size * self->buffer.elem_size;
+	return strndup(self->buffer.data, size);
+}

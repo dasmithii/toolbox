@@ -36,4 +36,8 @@ int Vector_reserve(Vector *const, const size_t);
 int Vector_expand(Vector *const);
 int Vector_contract(Vector *const);
 
+
+void *Vector_toBuffer(const Vector *self);
+
+
 #endif
