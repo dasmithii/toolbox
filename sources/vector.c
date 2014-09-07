@@ -254,8 +254,9 @@ int Vector_contract(Vector *const vec)
 // --------------------------------------------------------------- //
 void *Vector_hookLast(const Vector *const vec)
 {
-	int i = vec->size - 1;
-	return Vector_hook(vec, i);
+	if(vec->size)
+		return Vector_hook(vec, vec->size - 1);
+	return NULL;
 }
 
 // --------------------------------------------------------------- //
