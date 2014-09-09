@@ -1,106 +1,47 @@
 #ifndef _FLUX_LINKED_LIST_UTILITY_
 #define _FLUX_LINKED_LIST_UTILITY_
 #include <stdlib.h>
+#include <stdbool.h>
 
-
-
-// Represents one item in the linked list.
-typedef struct fllist_node {
-	struct fllist_node *next;
-	void *data;
-} fllist_node;
-
-// Represents a forward linked list.
 typedef struct {
-	fllist_node *first;
-	fllist_node *last;
-	size_t elem_size;
-} fllist;
+	size_t elementSize;
+	void *firstElement;
+} FLList;
 
 
-// Instanciates preallocated list.
-void fllist_init(fllist *const list
-	           , const size_t elem_size);
+void FLList_init(FLList *self, size_t elementSize);
+void FLList_clean(FLList *self);
+void FLList_clear(FLList *self);
 
-// Deallocates all list elements.
-void fllist_clear(fllist *const list);
+int FLList_prepend(FLList *self, void *data);
+int FLList_append(FLList *self, void *data);
+int FLList_insert(FLList *self, void *data, size_t i);
+void FLList_remove(FLList *self, size_t i);
+void FLList_removeHead(FLList *self);
+void FLList_set(FLList *self, size_t i, void *data);
 
-// Frees all internal memory.
-void fllist_clean(fllist *const list);
+void *FLList_hook(FLList *self, size_t i);
+void *FLList_hookLast(FLList *self);
+void FLList_fetch(FLList *self, size_t i, void *dest);
+void FLList_fetchLast(FLList *self, void *dest);
 
-// Clones to preallocated memory block.
-int fllist_copy(const fllist *const
-	          , fllist *const);
 
-// Allocates, clones, and returns copied list.
-fllist *fllist_clone(const fllist *const list);
+void FLList_each(FLList *self, void (*function)(void*));
 
-// Appends data from given address.
-int fllist_append(fllist *const list
-	            , const void *const element);
 
-// Prepends data from given address.
-int fllist_prepend(fllist *const list
-	             , const void* const element);
 
-// Inserts data from given address.
-int fllist_insert(fllist *const list
-	             , const unsigned index
-	             , const void *const element);
+typedef struct {
+	void *data;
+	void *next;
+	size_t elementSize;
+} FLListIterator;
 
-// Copies data at given address to given index.
-void fllist_set(fllist *const list
-	          , const unsigned index
-	          , const void *const element);
-
-// Returns pointer to location where item <index> is stored.
-void *fllist_hook(const fllist *const list
-	            , const unsigned index);
-
-// Hooks first element.
-void *fllist_hookHead(const fllist *const list);
-
-// Hooks last element.
-void *fllist_hookLast(const fllist *const list);
-
-// Copies data at given index to given address.
-void fllist_fetch(const fllist *const list
-	            , const unsigned index
-	            , void *const destination);
-
-// Fetches first element.
-void fllist_fetchHead(const fllist *const list
-	                , void *const destination);
-
-// Fetches last element.
-void fllist_fetchLast(const fllist *const list
-	                , void *const destination);
-
-// Removes item at given index, shifting subsquent items
-// leftward.
-void fllist_remove(fllist *const list
-	             , const unsigned index);
-
-// Removes last element.
-void fllist_pop(fllist *const list);
-
-// Removes first element.
-void fllist_popf(fllist *const list);
-
-// Applies given function to each element.
-void fllist_each(fllist *const list, void (*function)(void*));
-
-// Reverses items in list.
-void fllist_reverse(fllist *const list);
-
-// Applies bubblesort.
-void fllist_sort(fllist *const list, int (*compare)(const void*, const void*));
-
-// Returns bytes in each node.
-size_t fllist_nodeSize(const fllist *const list);
-
-// Counts elements in list.
-size_t fllist_size(const fllist *const list);
+FLListIterator FLList_begin(FLList *self); 
+FLListIterator FLList_end(FLList *self); 
+FLListIterator FLList_at(FLList *self, size_t i); 
+FLListIterator FLList_last(FLList *self);
+FLListIterator FLList_next(FLListIterator *self);
+bool FLListIterator_advance(FLListIterator *self);
 
 
 #endif
