@@ -26,9 +26,11 @@ void FLList_fetch(FLList *self, size_t i, void *dest);
 void FLList_fetchLast(FLList *self, void *dest);
 
 size_t FLList_length(FLList *self);
+void FLList_sort(FLList *self, int (*cmp)(const void*, const void*));
 
 
 void FLList_each(FLList *self, void (*function)(void*));
+void FLList_reverse(FLList *self);
 
 
 

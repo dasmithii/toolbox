@@ -249,4 +249,3 @@ bool FLListIterator_advance(FLListIterator *self)
 	self->next = getNext(self->data, self->elementSize);
 	return self->data? true:false;
 }
-
