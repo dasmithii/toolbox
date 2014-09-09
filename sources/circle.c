@@ -46,10 +46,19 @@ int Circle_insert(Circle *self, void *data){
 
 
 void Circle_remove(Circle *self){
-	FLList_removeNext(&self->list, self->item);
+	if(Circle_next(self) == self->list.firstElement)
+		FLList_remove(&self->list, 0);
+	else
+		FLList_removeNext(&self->list, self->item);
 }
 
 
 void Circle_each(Circle *self, void (*function)(void*)){
 	FLList_each(&self->list, function);
+}
+
+
+size_t Circle_length(Circle *self)
+{
+	return FLList_length(&self->list);
 }

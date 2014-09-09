@@ -11,7 +11,8 @@
 	PASS()
 
 
-TEST Circle_basic_test(){
+TEST Circle_basic_test()
+{
 	SETUP_CIRCLE();
 	for(int i = 0; i < 3; ++i)
 		Circle_insert(&c, &i);
@@ -27,6 +28,30 @@ TEST Circle_basic_test(){
 }
 
 
+TEST Circle_removal_test()
+{
+	SETUP_CIRCLE();
+
+	for(int i = 0; i < 3; ++i)
+		Circle_insert(&c, &i);
+
+	int order[] = {2,1,0,1,0,0};
+	int *p = order;
+
+	for(int loop = 0; loop < 3; ++loop){
+		for(int i = 0; i < Circle_length(&c); ++i){
+			int n;
+			Circle_fetch(&c, &n);
+			ASSERT_EQ(n, *p);
+			++p;
+			Circle_remove(&c);
+		}
+	}
+	CLEAN_CIRCLE();
+}
+
+
 GREATEST_SUITE(Circle_suite){
 	RUN_TEST(Circle_basic_test);
+	RUN_TEST(Circle_removal_test);
 }

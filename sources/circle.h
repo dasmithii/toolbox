@@ -23,6 +23,7 @@ void Circle_shift(Circle *self);
 int Circle_insert(Circle *self, void *data);
 void Circle_remove(Circle *self);
 void Circle_each(Circle *self, void (*function)(void*));
+size_t Circle_length(Circle *self);
 
 
 #endif
