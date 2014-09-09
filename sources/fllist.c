@@ -175,10 +175,10 @@ void FLList_fetchLast(FLList *self, void *dest)
 
 void FLList_each(FLList *self, void (*function)(void*))
 {
-	FLListIterator it = FLList_begin(self);
-	while(it.data){
-		function(it.data);
-		FLListIterator_advance(&it);
+	void *data = self->firstElement;
+	while(data){
+		function(data);
+		data = getNext(data, self->elementSize);
 	}
 }
 
