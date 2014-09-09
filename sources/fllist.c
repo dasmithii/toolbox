@@ -17,17 +17,17 @@ void FLList_clean(FLList *self)
 }
 
 
-static inline void setNext(void *data, size_t offset, void *next)
+static inline void FLList_setNext(FLList *self, void *node, void *next)
 {
-	void *dest = (char*) data + offset;
+	void *dest = (char*) node + self->elementSize;
 	memcpy(dest, &next, sizeof(void*));
 }
 
 
-static inline void *getNext(void *data, size_t elementSize)
+void *FLList_next(FLList *self, void *item)
 {
 	void *next;
-	void *addr = (void*) ((char*) data + elementSize);
+	void *addr = (void*) ((char*) item + self->elementSize);
 	memmove(&next, addr, sizeof(void*));
 	return next;
 }
@@ -38,7 +38,7 @@ void FLList_clear(FLList *self)
 	void *data = self->firstElement;
 	while(data){
 		void *prev = data;
-		data = getNext(prev, self->elementSize);
+		data = FLList_next(self, prev);
 		free(prev);
 	}
 }
@@ -49,36 +49,36 @@ int FLList_prepend(FLList *self, void *data)
 	void *node = malloc(self->elementSize + sizeof(void*));
 	if(!node) return 1;
 	memcpy(node, data, self->elementSize);
-	setNext(node, self->elementSize, self->firstElement);
+	FLList_setNext(self, node, self->firstElement);
 	self->firstElement = node;
 	return 0;
 }
 
 
-static inline void *newNode(void *data, size_t elementSize)
+static inline void *newNode(FLList *self, void *data)
 {
-	void *node = malloc(elementSize + sizeof(void*));
+	void *node = malloc(self->elementSize + sizeof(void*));
 	if(!node) return NULL;
-	memcpy(node, data, elementSize);
-	setNext(node, elementSize, NULL);
+	memcpy(node, data, self->elementSize);
+	FLList_setNext(self, node, NULL);
 	return node;
 }
 
 
-static inline void *nodeBefore(void *next, void *data, size_t elementSize)
+static inline void *nodeBefore(FLList *self, void *next, void *data)
 {
-	void *node = newNode(data, elementSize);
-	setNext(node, elementSize, next);
+	void *node = newNode(self, data);
+	FLList_setNext(self, node, next);
 	return node;
 }
 
 
-static inline int insertAfter(void *n0, void *data, size_t elementSize)
+int FLList_insertAfter(FLList *self, void *n0, void *data)
 {
-	void *n1 = getNext(n0, elementSize);
-	void *node = nodeBefore(n1, data, elementSize);
+	void *n1 = FLList_next(self, n0);
+	void *node = nodeBefore(self, n1, data);
 	if(node){
-		setNext(n0, elementSize, node);
+		FLList_setNext(self, n0, node);
 		return 0;
 	}
 	return 1;
@@ -88,11 +88,11 @@ static inline int insertAfter(void *n0, void *data, size_t elementSize)
 int FLList_append(FLList *self, void *data)
 {
 	if(self->firstElement){
-		return insertAfter(FLList_hookLast(self)
-		             	 , data
-		                 , self->elementSize);
+		return FLList_insertAfter(self
+			                    , FLList_hookLast(self)
+		             	        , data);
 	} else {
-		self->firstElement = newNode(data, self->elementSize);
+		self->firstElement = newNode(self, data);
 		return self->firstElement? 0:1;
 	}
 }
@@ -104,17 +104,17 @@ int FLList_insert(FLList *self, void *data, size_t i)
 	if(i == 0)
 		return FLList_prepend(self, data);
 	else
-		return insertAfter(FLList_hook(self, i)
-			              , data
-			              , self->elementSize);
+		return FLList_insertAfter(self
+			                    , FLList_hook(self, i - 1)
+			                    , data);
 }
 
 
-static inline void squeezeNext(void *n0, size_t elementSize)
+static inline void squeezeNext(FLList *self, void *n0)
 {
-	void *n1 = getNext(n0, elementSize);
-	void *n2 = getNext(n1, elementSize);
-	setNext(n0, elementSize, n2);
+	void *n1 = FLList_next(self, n0);
+	void *n2 = FLList_next(self, n1);
+	FLList_setNext(self, n0, n2);
 	free(n1);
 }
 
@@ -122,7 +122,7 @@ static inline void squeezeNext(void *n0, size_t elementSize)
 inline void FLList_removeHead(FLList *self)
 {
 	void *first = self->firstElement;
-	self->firstElement = getNext(first, self->elementSize);
+	self->firstElement = FLList_next(self, first);
 	free(first);
 }
 
@@ -132,8 +132,8 @@ void FLList_remove(FLList *self, size_t i)
 	if(i == 0)
 		FLList_removeHead(self);
 	else
-		squeezeNext(FLList_hook(self, i - 1)
-			      , self->elementSize);
+		squeezeNext(self
+			      , FLList_hook(self, i - 1));
 }
 
 
@@ -146,15 +146,18 @@ void FLList_set(FLList *self, size_t i, void *source)
 
 void *FLList_hook(FLList *self, size_t i)
 {
-	return FLList_at(self, i).data;
+	void *node = self->firstElement;
+	for(int x = 0; x < i; ++x)
+		node = FLList_next(self, node);
+	return node;
 }
 
 
 void *FLList_hookLast(FLList *self)
 {
 	void *node = self->firstElement;
-	while(node && getNext(node, self->elementSize))
-		node = getNext(node, self->elementSize);
+	while(node && FLList_next(self, node))
+		node = FLList_next(self, node);
 	return node;
 }
 
@@ -178,7 +181,7 @@ void FLList_each(FLList *self, void (*function)(void*))
 	void *data = self->firstElement;
 	while(data){
 		function(data);
-		data = getNext(data, self->elementSize);
+		data = FLList_next(self, data);
 	}
 }
 
@@ -189,63 +192,9 @@ size_t FLList_length(FLList *self)
 	void *data = self->firstElement;
 	while(data){
 		++n;
-		data = getNext(data, self->elementSize);
+		data = FLList_next(self, data);
 	}
 	return n;
 }
 
 
-static FLListIterator iteratorFrom(void *data, size_t elementSize)
-{
-	FLListIterator ret;
-	ret.data = data;
-	ret.next = getNext(data, elementSize);
-	ret.elementSize = elementSize;
-	return ret;
-}
-
-
-FLListIterator FLList_begin(FLList *self)
-{
-	return iteratorFrom(self->firstElement, self->elementSize);
-} 
-
-
-FLListIterator FLList_end(FLList *self)
-{
-	return iteratorFrom(NULL, self->elementSize);
-} 
-
-
-FLListIterator FLList_at(FLList *self, size_t i)
-{
-	FLListIterator it = FLList_begin(self);
-	for(int x = 0; x < i; ++x)
-		FLListIterator_advance(&it);
-	return it;
-} 
-
-
-FLListIterator FLList_last(FLList *self){
-	FLListIterator it = FLList_begin(self);
-	while(it.next){
-		FLListIterator_advance(&it);
-	}
-	return it;
-}
-
-
-FLListIterator FLList_next(FLListIterator *self)
-{
-	FLListIterator it = *self;
-	FLListIterator_advance(&it);
-	return it;
-}
-
-
-bool FLListIterator_advance(FLListIterator *self)
-{
-	self->data = self->next;
-	self->next = getNext(self->data, self->elementSize);
-	return self->data? true:false;
-}

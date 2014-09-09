@@ -33,19 +33,8 @@ void FLList_each(FLList *self, void (*function)(void*));
 void FLList_reverse(FLList *self);
 
 
-
-typedef struct {
-	void *data;
-	void *next;
-	size_t elementSize;
-} FLListIterator;
-
-FLListIterator FLList_begin(FLList *self); 
-FLListIterator FLList_end(FLList *self); 
-FLListIterator FLList_at(FLList *self, size_t i); 
-FLListIterator FLList_last(FLList *self);
-FLListIterator FLList_next(FLListIterator *self);
-bool FLListIterator_advance(FLListIterator *self);
+void *FLList_next(FLList *self, void *item);
+int FLList_insertAfter(FLList *self, void *item, void *data);
 
 
 #endif
