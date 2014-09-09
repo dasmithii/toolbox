@@ -34,6 +34,7 @@ void FLList_reverse(FLList *self);
 
 
 void *FLList_next(FLList *self, void *item);
+void FLList_removeNext(FLList *self, void *item);
 int FLList_insertAfter(FLList *self, void *item, void *data);
 
 

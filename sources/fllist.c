@@ -110,7 +110,8 @@ int FLList_insert(FLList *self, void *data, size_t i)
 }
 
 
-static inline void squeezeNext(FLList *self, void *n0)
+
+void FLList_removeNext(FLList *self, void *n0)
 {
 	void *n1 = FLList_next(self, n0);
 	void *n2 = FLList_next(self, n1);
@@ -132,8 +133,8 @@ void FLList_remove(FLList *self, size_t i)
 	if(i == 0)
 		FLList_removeHead(self);
 	else
-		squeezeNext(self
-			      , FLList_hook(self, i - 1));
+		FLList_removeNext(self
+			            , FLList_hook(self, i - 1));
 }
 
 
