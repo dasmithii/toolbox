@@ -20,7 +20,7 @@
 	check_m((a), "Unexpected null pointer.");
 
 #define check_ptrs(a, b) \
-	check_ptr((a));      \ 
+	check_ptr((a));      \
  	check_ptr((b))
 
 #define check_max(n, max) \
@@ -35,19 +35,19 @@
 #define check_floor(n, floor) \
  	check_m((n) > (floor), "Value too small.");
 
-#define check_bound_ii(n, min, max) \ 
+#define check_bound_ii(n, min, max) \
  	check_min(n, min);              \
  	check_max(n, max)
 
-#define check_bound_ee(n, floor, ceil) \ 
+#define check_bound_ee(n, floor, ceil) \
  	check_floor(n, min);               \
  	check_ceil(n, max)
 
-#define check_bound_ie(n, min, ceil) \ 
+#define check_bound_ie(n, min, ceil) \
  	check_min(n, min);               \
  	check_ceil(n, ceil)
 
-#define check_bound_ei(n, floor, max) \ 
+#define check_bound_ei(n, floor, max) \
  	check_floor(n, floor);            \
  	check_max(n, max)
 
