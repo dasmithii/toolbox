@@ -6,7 +6,6 @@
 TEST bits_basic(){
 	unsigned int n = 0;
 	FLAG_BIT(n, 0);
-	printf("HERE: %u\n", n);
 	ASSERT(GET_BIT(n, 0) == true);
 	ASSERT(GET_BIT(n, 1) == false);
 	CLEAR_BIT(n, 0);
