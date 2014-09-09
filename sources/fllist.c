@@ -183,6 +183,18 @@ void FLList_each(FLList *self, void (*function)(void*))
 }
 
 
+size_t FLList_length(FLList *self)
+{
+	size_t n = 0;
+	void *data = self->firstElement;
+	while(data){
+		++n;
+		data = getNext(data, self->elementSize);
+	}
+	return n;
+}
+
+
 static FLListIterator iteratorFrom(void *data, size_t elementSize)
 {
 	FLListIterator ret;
