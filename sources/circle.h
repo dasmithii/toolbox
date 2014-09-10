@@ -25,5 +25,6 @@ void Circle_remove(Circle *self);
 void Circle_each(Circle *self, void (*function)(void*));
 size_t Circle_length(Circle *self);
 
+bool Circle_isEmpty(Circle *self);
 
 #endif

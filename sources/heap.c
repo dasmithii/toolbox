@@ -219,3 +219,9 @@ void Heap_foreach(Heap *self, void (*function)(const void *))
 	}
 }
 
+
+bool Heap_isEmpty(Heap *self)
+{
+	return self->elementCount? false:true;
+}
+

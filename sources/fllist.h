@@ -38,4 +38,7 @@ void FLList_removeNext(FLList *self, void *item);
 int FLList_insertAfter(FLList *self, void *item, void *data);
 
 
+bool FLList_isEmpty(FLList *self);
+
+
 #endif

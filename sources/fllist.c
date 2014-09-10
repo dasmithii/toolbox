@@ -199,3 +199,9 @@ size_t FLList_length(FLList *self)
 }
 
 
+bool FLList_isEmpty(FLList *self)
+{
+	return self->firstElement? false:true;
+}
+
+

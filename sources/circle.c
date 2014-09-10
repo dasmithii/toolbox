@@ -62,3 +62,9 @@ size_t Circle_length(Circle *self)
 {
 	return FLList_length(&self->list);
 }
+
+
+bool Circle_isEmpty(Circle *self)
+{
+	return FLList_isEmpty(&self->list);
+}

@@ -1,6 +1,7 @@
 #ifndef _BASELINE_HEAP_
 #define _BASELINE_HEAP_
 #include <stddef.h>
+#include <stdbool.h>
 
 
 typedef struct {
@@ -44,5 +45,7 @@ void Heap_fetchTop(Heap *self
 void Heap_foreach(Heap *self, void (*function)(const void *));
 
 
-void Heap_test();
+// 
+bool Heap_isEmpty(Heap *self);
+
 #endif
