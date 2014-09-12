@@ -51,7 +51,28 @@ TEST Circle_removal_test()
 }
 
 
+TEST Circle_fef_test()
+{
+	SETUP_CIRCLE();
+
+	for(int i = 0; i < 3; ++i)
+		Circle_insert(&c, &i);
+	
+	for(int i = 0; i < 3; ++i)
+		Circle_remove(&c);
+
+	for(int i = 0; i < 3; ++i)
+		Circle_insert(&c, &i);
+
+	ASSERT_EQ(3, Circle_length(&c));
+
+	CLEAN_CIRCLE();
+}
+
+
+
 GREATEST_SUITE(Circle_suite){
 	RUN_TEST(Circle_basic_test);
 	RUN_TEST(Circle_removal_test);
+	RUN_TEST(Circle_fef_test);
 }
