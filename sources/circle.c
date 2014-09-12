@@ -72,3 +72,12 @@ bool Circle_isEmpty(Circle *self)
 {
 	return FLList_isEmpty(&self->list);
 }
+
+
+int Circle_append(Circle *self, void *data)
+{
+	if(Circle_insert(self, data))
+		return 1;
+	Circle_shift(self);
+	return 0;
+}
