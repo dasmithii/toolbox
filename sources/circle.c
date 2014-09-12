@@ -39,21 +39,21 @@ void Circle_shift(Circle *self){
 int Circle_insert(Circle *self, void *data){
 	if(self->item){
 		return FLList_insertAfter(&self->list, self->item, data);
+	} else {
+		int r = FLList_insert(&self->list, data, 0);
+		self->item = self->list.firstElement;
+		return r;
 	}
-	int r = FLList_insert(&self->list, data, 0);
-	self->item = self->list.firstElement;
-	return r;
 }
 
 
 void Circle_remove(Circle *self){
-	if(Circle_next(self) == self->list.firstElement){
-		if(FLList_next(&self->list, self->list.firstElement))
-			self->item = NULL;
+	if(Circle_next(self) == self->list.firstElement)
 		FLList_remove(&self->list, 0);
-	} else {
+	else 
 		FLList_removeNext(&self->list, self->item);
-	}
+	if(FLList_isEmpty(&self->list))
+		self->item = NULL;
 }
 
 
