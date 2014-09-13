@@ -1,13 +1,14 @@
 ## Overview
 Baseline provides utilities for C-based software projects. These consist of data structures, functions, and macros chosen by popular necessity.  If you find yourself re-implementing common algorithms or datatypes too frequently, this library may fit your needs.
 
-Check out the [docs](documentation) for more information. [Include.md](documentation/include.md) may be of particular interest to you, as it describes the include process of this library.
+Check out the [docs](documentation) for more information.
 
 
 ## Quick Reference
 ##### Data Structures
-+ Dynamic Array
-+ Linked List
++ Vector
++ Forward-linked List
++ Circularly-linked List
 + Binary Search Tree
 + Trinary Search Tree
 + Hashtable
