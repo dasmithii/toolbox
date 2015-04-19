@@ -1,4 +1,4 @@
-#include <kit/greatest.h>
+#include "greatest.h"
 extern SUITE(Array_suite);
 extern SUITE(bits_suite);
 extern SUITE(Circle_suite);

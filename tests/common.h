@@ -1,4 +1,4 @@
-#ifndef Baseline_TESTS_COMMON
-#define Baseline_TESTS_COMMON
+#ifndef TOOLBOX_TESTS_COMMON_H_
+#define TOOLBOX_TESTS_COMMON_H_
 #define ITERS 1000
 #endif

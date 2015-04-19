@@ -1,6 +1,6 @@
 #include "common.h"
 #include "../sources/fllist.h"
-#include <kit/greatest.h>
+#include "greatest.h"
 
 #define SETUP_FLLIST()              \
     FLList list;                    \

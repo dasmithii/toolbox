@@ -31,3 +31,6 @@ install_manifest.txt
 bin
 build
 dist
+
+*.ght
+*/*.h.ghc

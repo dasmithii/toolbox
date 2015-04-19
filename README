@@ -1,0 +1,51 @@
+Overview
+
+    Toolbox provides utilities to aid the development of C-based
+    software projects. It includes excessively reimplemented
+    functions and data structures, plus a few convenience macros,
+    which deal mostly with error handling.
+
+
+
+Contents
+
+    Data Structures
+	    
+        + Array
+        + Circularly-linked List
+        + Forward-linked List
+        + Hash Table
+        + Heap
+        + Vector
+
+
+	Miscellaneous Utilities
+
+        + Debugging
+        + Error-handling
+        + File I/O
+
+
+
+Installation/Usage
+
+    The easiest way is simple copy/paste. Clone this repository
+    into a subdirectory within your project and alter your
+    Makefile (or Makefile analog) accordingly.
+
+    If you don't need the toolbox unit tests, or any particular
+    tools, feel free to exclude them from your source tree. Most
+    people, myself included, include the sources subdirectory 
+    alone.
+
+
+
+Testing
+
+    There are some fairly thorough unit tests in the /tests 
+    subdirectory. To perform these tests, enter said directory, 
+    run 'make', and execute the build output with: './test'. 
+    In the case that a test fails, submit an issue on GitHub 
+    and I'll deal with it ASAP.
+
+

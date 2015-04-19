@@ -1,5 +1,5 @@
 #include "../sources/bits.h"
-#include <kit/greatest.h>
+#include "greatest.h"
 #include <limits.h>
 
 

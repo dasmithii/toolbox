@@ -1,5 +1,5 @@
 #include "../sources/circle.h"
-#include <kit/greatest.h>
+#include "greatest.h"
 
 
 #define SETUP_CIRCLE()  \
