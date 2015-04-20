@@ -1,3 +1,8 @@
+// Toolkit - a collection of utilities for C-based software projects.
+// Douglas Adam Smith II
+// github.com/dasmithii/toolkit
+
+
 #include "list.h"
 #include "stdlib.h"
 #include "assert.h"
