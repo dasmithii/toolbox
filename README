@@ -12,11 +12,14 @@ Contents
     Data Structures
 	    
         + Array
-        + Circularly-linked List
+        + Vector
         + Forward-linked List
+        + Doubly-linked List
+        + Circularly-linked List
         + Hash Table
         + Heap
-        + Vector
+        + Stack
+        + Queue
 
 
 	Miscellaneous Utilities
