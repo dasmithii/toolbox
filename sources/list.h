@@ -26,8 +26,12 @@ int List_append(List *self, void *elem);
 int List_insert(List *self, int index, void *elem);
 void List_remove(List *self, int index);
 void List_empty(List *self);
+#define List_clean(a) List_empty(a)
 ListNode *List_hookNode(List *self, int index);
 void *List_hook(List *self, int index);
 void List_fetch(List *self, int index, void *dest);
+void List_set(List *self, int index, void *data);
+void List_each(List *self, void (*function)(void*));
+
 
 #endif

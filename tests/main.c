@@ -7,6 +7,7 @@ extern SUITE(FLList_suite);
 extern SUITE(Vector_suite);
 extern SUITE(hash_suite);
 extern SUITE(Heap_suite);
+extern SUITE(List_suite);
 
 
 GREATEST_MAIN_DEFS();
@@ -19,6 +20,7 @@ int main(int argc, char **argv) {
 	RUN_SUITE(memory_suite);  
 	RUN_SUITE(Vector_suite);
 	RUN_SUITE(Heap_suite);
+	RUN_SUITE(List_suite);
 	GREATEST_MAIN_END();
 	return 0;
 }

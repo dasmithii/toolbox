@@ -101,6 +101,7 @@ int List_insert(List *self, int index, void *elem){
 	if(!node){
 		return 1;
 	}
+	self->length++;
 	return 0;
 }
 
@@ -121,6 +122,7 @@ void List_remove(List *self, int index){
 	}
 	free(node->data);
 	free(node);
+	self->length--;
 }
 
 void List_empty(List *self){
@@ -141,9 +143,8 @@ ListNode *List_hookNode(List *self, int index){
 		}
 	} else{
 		node = self->last;
-		while(index){
+		for(int i = 0; i < self->length - index - 1; ++i){
 			node = node->prev;
-			index--;
 		}
 	}
 	return node;
@@ -159,4 +160,21 @@ void List_fetch(List *self, int index, void *dest){
 	assert(dest);
 	void *data = List_hook(self, index);
 	memcpy(dest, data, self->elem_size);
+}
+
+
+void List_set(List *self, int index, void *data){
+	assert(self);
+	assert(index >= 0 && index < self->length);
+	assert(data);
+	ListNode *node = List_hookNode(self, index);
+	memcpy(node->data, data, self->elem_size);
+}
+
+void List_each(List *self, void (*function)(void*)){
+	ListNode *node = self->first;
+	while(node){
+		function(node->data);
+		node = node->next;
+	}
 }
